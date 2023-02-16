@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Wallpaper Collage Toggler", "Wallpaper Collage Toggler.pyproj", "{4FAADA85-1C76-484D-86CD-46EBA98B2059}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4FAADA85-1C76-484D-86CD-46EBA98B2059}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FAADA85-1C76-484D-86CD-46EBA98B2059}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {327D2F30-092E-41EA-BD32-B545618DC311}
+	EndGlobalSection
+EndGlobal

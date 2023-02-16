@@ -1,0 +1,74 @@
+"""
+Program which toggles the slideshow collages on or off when run
+
+The registry entry being modified is the following:
+"Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen\SlideShowLayout"
+
+SlideShowLayout is a DWORD32 and is set to 0 or 1
+
+"""
+
+from os import access, system
+import winreg, ctypes, argparse
+from pickle import FALSE
+
+#Command line arguments which add the ability to show the console while the program is running
+def getArgs():
+    parser = argparse.ArgumentParser(
+        prog="Lock Screen Collage Disabler",
+        description="Program which toggles the collages shown on the lock screen during slideshows. If it is turned off, there will still be transitions and zooms on individual images, but only image will show up at a time.",
+        epilog="2023/02/16 Michael Vogl. See text below for help")
+
+    parser.add_argument('-sc', '--showconsole', action='store_true', default=False,help="Shows the console while running the program")
+    args = vars(parser.parse_args())
+    return args
+
+def toggleSlideshow(args):
+    #Check to see if the registry entry exists. If not, create it. Windows does not have this registry entry by default
+    try:
+        access_registry = winreg.ConnectRegistry(None,winreg.HKEY_CURRENT_USER)
+        access_key = winreg.OpenKey(access_registry,r"Software\Microsoft\Windows\CurrentVersion\Lock Screen", reserved=0, access=winreg.KEY_READ)
+        print(winreg.QueryValueEx(access_key, "SlideShowLayout")[0])
+    except Exception as e:
+        print(e)
+        #Create the registry key and set it to 0 to turn off 
+        try:
+            ctypes.windll.user32.MessageBoxW(0, "Cannot find or read registry entry. Attempting to create it...", "Michael's Tools", 0)
+            access_registry = winreg.ConnectRegistry(None,winreg.HKEY_CURRENT_USER)
+            access_key = winreg.CreateKey(access_registry,r"Software\Microsoft\Windows\CurrentVersion\Lock Screen")
+            winreg.SetValueEx(access_key, "SlideShowLayout", 1, winreg.REG_DWORD, 0)
+            ctypes.windll.user32.MessageBoxW(0, "Turned off Slideshow Collage", "Michael's Tools", 0)
+            return True
+        #Fail and display the error
+        except Exception as ef:
+            ctypes.windll.user32.MessageBoxW(0, ("FATAL: Failed to find and create registry entry:\n")+str(e), "Michael's Tools", 0)
+            return False
+
+    access_key = winreg.OpenKey(access_registry,r"Software\Microsoft\Windows\CurrentVersion\Lock Screen", reserved=0, access=winreg.KEY_READ)
+
+    #Check to see if hte registry entry is enabled or disabled, then toggle it and display a message
+    if (winreg.QueryValueEx(access_key, "SlideShowLayout")[0] == 1):
+        access_key = winreg.OpenKey(access_registry,r"Software\Microsoft\Windows\CurrentVersion\Lock Screen", reserved=0, access=winreg.KEY_WRITE)
+        winreg.SetValueEx(access_key, "SlideShowLayout", 1, winreg.REG_DWORD, 0)
+        ctypes.windll.user32.MessageBoxW(0, "Turned off Slideshow Collage", "Michael's Tools", 0)
+
+    elif (winreg.QueryValueEx(access_key, "SlideShowLayout")[0] == 0):
+        access_key = winreg.OpenKey(access_registry,r"Software\Microsoft\Windows\CurrentVersion\Lock Screen", reserved=0, access=winreg.KEY_WRITE)
+        winreg.SetValueEx(access_key, "SlideShowLayout", 1, winreg.REG_DWORD, 1)
+        ctypes.windll.user32.MessageBoxW(0, "Turned on Slideshow Collage", "Michael's Tools", 0)
+    
+    #If the registry key is set to something other than 0 or 1, display it and fail
+    else:
+        print("Registry key is not equal to 0 or 1: " + winreg.QueryValueEx(access_key, "SlideShowLayout"))
+        return False
+
+    #Print the result to the command line if show console is enabled, then pause the program until the user presses enter
+    if (args['showconsole'] == True):
+        access_key = winreg.OpenKey(access_registry,r"Software\Microsoft\Windows\CurrentVersion\Lock Screen", reserved=0, access=winreg.KEY_READ)
+        print("Changed to " + str(winreg.QueryValueEx(access_key, "SlideShowLayout")))
+        system("pause")
+
+    winreg.CloseKey(access_key)
+    return True
+
+print(toggleSlideshow(getArgs()))
