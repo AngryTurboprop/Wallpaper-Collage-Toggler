@@ -1,11 +1,7 @@
 """
 Program which toggles the slideshow collages on or off when run
 
-The registry entry being modified is the following:
-"Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Lock Screen\SlideShowLayout"
-
-SlideShowLayout is a DWORD32 and is set to 0 or 1
-
+2023 Michael Vogl
 """
 
 import winreg, ctypes

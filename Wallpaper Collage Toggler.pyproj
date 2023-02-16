@@ -25,6 +25,8 @@
     <Compile Include="CollageToggler.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Collages_Off.jpg" />
+    <Content Include="Collages_On.jpg" />
     <Content Include="CollageToggler.py.old" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
